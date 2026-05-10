@@ -6,22 +6,34 @@ import { Interview, Session, Report, Response, User } from "@/models";
 import bcrypt from "bcryptjs";
 import { randomBytes } from "crypto";
 
-// POST /api/seed — seeds the database with demo data
+// POST /api/seed — seeds the database with demo data (idempotent)
 export async function POST(req: NextRequest) {
   try {
     await dbConnect();
 
-    // Clear existing demo data
-    await User.deleteMany({ email: { $in: ["demo@recruiter.com", "alice@recruiter.com"] } });
-
-    // Create demo recruiters
+    // Upsert demo recruiter (don't delete — keeps existing sessions alive)
     const pw = await bcrypt.hash("password123", 10);
-    const recruiter = await User.create({
-      email: "demo@recruiter.com",
-      passwordHash: pw,
-      name: "Demo Recruiter",
-      role: "recruiter",
-    });
+    const recruiter = await User.findOneAndUpdate(
+      { email: "demo@recruiter.com" },
+      {
+        $setOnInsert: {
+          email: "demo@recruiter.com",
+          passwordHash: pw,
+          name: "demo",
+          role: "recruiter",
+        },
+      },
+      { upsert: true, new: true }
+    );
+
+    // Only seed interviews if none exist for this recruiter
+    const existingInterviews = await Interview.find({ recruiterId: recruiter._id });
+    if (existingInterviews.length > 0) {
+      return NextResponse.json({
+        message: "Demo data already exists!",
+        credentials: { email: "demo@recruiter.com", password: "password123" },
+      });
+    }
 
     // Create demo interviews
     const interviews = await Interview.insertMany([
@@ -60,11 +72,9 @@ export async function POST(req: NextRequest) {
     ];
 
     const defaultInsights = [
-      [
-        { type: "strength", text: "Demonstrated exceptional knowledge of React hooks and modern patterns." },
-        { type: "strength", text: "Showed confidence and clarity when explaining complex technical decisions." },
-        { type: "improvement", text: "Could improve on providing concrete metrics when discussing past impact." }
-      ],
+      { type: "strength", text: "Demonstrated exceptional knowledge of React hooks and modern patterns." },
+      { type: "strength", text: "Showed confidence and clarity when explaining complex technical decisions." },
+      { type: "improvement", text: "Could improve on providing concrete metrics when discussing past impact." },
     ];
 
     for (const candidate of candidatesData) {
@@ -93,17 +103,18 @@ export async function POST(req: NextRequest) {
         technical: candidate.scores.technical,
         culturalFit: candidate.scores.culturalFit,
         sentiment: candidate.scores.sentiment,
-        insights: defaultInsights[0],
+        insights: defaultInsights,
         status: "ready",
       });
     }
 
-    return NextResponse.json({ 
+    return NextResponse.json({
       message: "Demo data seeded successfully!",
-      credentials: { email: "demo@recruiter.com", password: "password123" }
+      credentials: { email: "demo@recruiter.com", password: "password123" },
     });
   } catch (error) {
     console.error("Seed error:", error);
     return NextResponse.json({ error: "Seed failed: " + (error as Error).message }, { status: 500 });
   }
 }
+

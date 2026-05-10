@@ -44,22 +44,37 @@ export const authOptions: AuthOptions = {
               role: (newUser as any).role,
             };
           } else {
-            // Login flow
-            if (!existingUser) {
-              throw new Error("No account found. Please sign up.");
+            // Login flow — auto-seed demo account if it doesn't exist
+            let user = existingUser;
+            if (!user) {
+              // Only auto-create for the demo account
+              if (
+                credentials.email === "demo@recruiter.com" &&
+                credentials.password === "password123"
+              ) {
+                const hashedPassword = await bcrypt.hash("password123", 10);
+                user = await User.create({
+                  email: "demo@recruiter.com",
+                  passwordHash: hashedPassword,
+                  name: "demo",
+                  role: "recruiter",
+                });
+              } else {
+                throw new Error("No account found. Please sign up.");
+              }
             }
             const isValid = await bcrypt.compare(
               credentials.password,
-              existingUser.passwordHash
+              user.passwordHash
             );
             if (!isValid) {
               throw new Error("Invalid password.");
             }
             return {
-              id: existingUser._id.toString(),
-              email: existingUser.email,
-              name: existingUser.name,
-              role: existingUser.role,
+              id: user._id.toString(),
+              email: user.email,
+              name: user.name,
+              role: user.role,
             };
           }
         } catch (error: any) {
