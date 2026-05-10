@@ -4,7 +4,6 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import dbConnect from "@/lib/mongodb";
 import { Interview, Session, Report } from "@/models";
 
-// GET /api/dashboard/stats — dashboard KPI stats for the logged-in recruiter
 export async function GET(req: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
@@ -32,7 +31,6 @@ export async function GET(req: NextRequest) {
       ? Math.round((completedSessions.length / sessions.length) * 100)
       : 0;
 
-    // Weekly volume for chart (last 7 days, Sun=0..Sat=6)
     const now = new Date();
     const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
     const weeklyVolume = days.map((name, i) => {
@@ -44,7 +42,6 @@ export async function GET(req: NextRequest) {
       return { name, interviews: count };
     });
 
-    // Calculate trends: compare this week vs last week
     const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
     const twoWeeksAgo = new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000);
 

@@ -6,12 +6,10 @@ import { Interview, Session, Report, Response, User } from "@/models";
 import bcrypt from "bcryptjs";
 import { randomBytes } from "crypto";
 
-// POST /api/seed — seeds the database with demo data (idempotent)
 export async function POST(req: NextRequest) {
   try {
     await dbConnect();
 
-    // Upsert demo recruiter (don't delete — keeps existing sessions alive)
     const pw = await bcrypt.hash("password123", 10);
     const recruiter = await User.findOneAndUpdate(
       { email: "demo@recruiter.com" },
@@ -26,7 +24,6 @@ export async function POST(req: NextRequest) {
       { upsert: true, new: true }
     );
 
-    // Only seed interviews if none exist for this recruiter
     const existingInterviews = await Interview.find({ recruiterId: recruiter._id });
     if (existingInterviews.length > 0) {
       return NextResponse.json({
@@ -35,7 +32,6 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    // Create demo interviews
     const interviews = await Interview.insertMany([
       {
         recruiterId: recruiter._id,
@@ -62,7 +58,6 @@ export async function POST(req: NextRequest) {
       },
     ]);
 
-    // Demo candidates with completed sessions + reports
     const candidatesData = [
       { name: "Sarah Jenkins", email: "sarah@candidate.com", interviewIdx: 0, scores: { communication: 85, technical: 90, confidence: 78, problemSolving: 88, culturalFit: 82, overall: 85, sentiment: "Highly Positive" } },
       { name: "David Chen", email: "david@candidate.com", interviewIdx: 0, scores: { communication: 92, technical: 88, confidence: 91, problemSolving: 90, culturalFit: 89, overall: 90, sentiment: "Highly Positive" } },

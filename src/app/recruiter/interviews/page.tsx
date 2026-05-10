@@ -47,7 +47,6 @@ export default function InterviewsPage() {
 
   return (
     <div className="min-h-screen bg-slate-50 flex">
-      {/* Desktop Sidebar */}
       <aside className="w-64 bg-[#0F1F3D] text-white flex-col shrink-0 hidden md:flex">
         <div className="p-6 flex items-center gap-2">
           <div className="w-8 h-8 rounded bg-[#2563EB] flex items-center justify-center font-bold">S</div>
@@ -79,7 +78,6 @@ export default function InterviewsPage() {
       </aside>
 
       <div className="flex-1 flex flex-col min-h-screen">
-        {/* Mobile Top Nav */}
         <div className="md:hidden flex items-center justify-between bg-[#0F1F3D] text-white px-4 py-3">
           <div className="flex items-center gap-2">
             <div className="w-7 h-7 rounded bg-[#2563EB] flex items-center justify-center">

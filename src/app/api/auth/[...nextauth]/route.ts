@@ -13,7 +13,7 @@ export const authOptions: AuthOptions = {
         password: { label: "Password", type: "password" },
         role: { label: "Role", type: "text" },
         name: { label: "Name", type: "text" },
-        action: { label: "Action", type: "text" }, // "signup" or "login"
+        action: { label: "Action", type: "text" },
       },
       async authorize(credentials) {
         try {
@@ -27,7 +27,6 @@ export const authOptions: AuthOptions = {
 
           if (credentials.action === "signup") {
             if (existingUser) {
-              // Return null with a custom error via the URL
               throw new Error("User already exists. Please log in.");
             }
             const hashedPassword = await bcrypt.hash(credentials.password, 10);
@@ -44,10 +43,8 @@ export const authOptions: AuthOptions = {
               role: (newUser as any).role,
             };
           } else {
-            // Login flow — auto-seed demo account if it doesn't exist
             let user = existingUser;
             if (!user) {
-              // Only auto-create for the demo account
               if (
                 credentials.email === "demo@recruiter.com" &&
                 credentials.password === "password123"
@@ -78,7 +75,6 @@ export const authOptions: AuthOptions = {
             };
           }
         } catch (error: any) {
-          // NextAuth v4 in App Router: throw errors as-is so they surface in res.error
           throw new Error(error.message || "Authentication failed");
         }
       },

@@ -78,7 +78,6 @@ export default function RecruiterDashboard() {
 
   return (
     <div className="min-h-screen bg-slate-50 flex">
-      {/* Desktop Sidebar */}
       <aside className="w-64 bg-[#0F1F3D] text-white flex flex-col shrink-0 hidden md:flex">
         <div className="p-6 flex items-center gap-2">
           <div className="w-8 h-8 rounded bg-[#2563EB] flex items-center justify-center">
@@ -114,9 +113,7 @@ export default function RecruiterDashboard() {
         </div>
       </aside>
 
-      {/* Main Content */}
       <main className="flex-1 p-4 md:p-8 overflow-y-auto">
-        {/* Mobile Top Nav */}
         <div className="md:hidden flex items-center justify-between mb-6 bg-[#0F1F3D] text-white px-4 py-3 rounded-xl">
           <div className="flex items-center gap-2">
             <div className="w-7 h-7 rounded bg-[#2563EB] flex items-center justify-center">
@@ -143,7 +140,6 @@ export default function RecruiterDashboard() {
           </Link>
         </header>
 
-        {/* KPI Cards */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
           {[
             { label: "Total Interviews", value: loading ? "—" : stats?.totalInterviews?.toString() ?? "0", icon: <Users className="w-5 h-5 text-[#2563EB]" />, trend: stats?.trends?.interviews ?? "0%" },
@@ -169,7 +165,6 @@ export default function RecruiterDashboard() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Weekly Chart */}
           <div className="lg:col-span-2 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-lg font-bold text-[#0F1F3D]">Interview Volume (7 Days)</h2>
@@ -196,7 +191,6 @@ export default function RecruiterDashboard() {
             </div>
           </div>
 
-          {/* Recent Candidates */}
           <div className="bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-col">
             <div className="p-6 border-b border-slate-100 flex items-center justify-between">
               <h2 className="text-lg font-bold text-[#0F1F3D]">Recent Candidates</h2>
@@ -235,7 +229,6 @@ export default function RecruiterDashboard() {
           </div>
         </div>
 
-        {/* Mobile Seed Button */}
         <div className="md:hidden mt-6 text-center">
           <button onClick={handleSeed} disabled={seeding} className="text-xs text-slate-400 hover:text-slate-600 flex items-center gap-1 mx-auto">
             <RefreshCw className={`w-3 h-3 ${seeding ? "animate-spin" : ""}`} />
