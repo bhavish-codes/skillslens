@@ -47,15 +47,15 @@ export default function LandingPage() {
       <section className="bg-[#0F1F3D] text-white py-12">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8 divide-x divide-slate-700">
           <div className="text-center px-4">
-            <div className="text-4xl font-heading font-bold mb-2 text-[#67E8F9]">28k+</div>
+            <div className="text-4xl font-heading font-bold mb-2 text-[#67E8F9]">28+</div>
             <div className="text-sm text-slate-400 font-medium">Active Users</div>
           </div>
           <div className="text-center px-4">
-            <div className="text-4xl font-heading font-bold mb-2 text-[#67E8F9]">79k+</div>
+            <div className="text-4xl font-heading font-bold mb-2 text-[#67E8F9]">79+</div>
             <div className="text-sm text-slate-400 font-medium">Interviews Analyzed</div>
           </div>
           <div className="text-center px-4">
-            <div className="text-4xl font-heading font-bold mb-2 text-[#67E8F9]">4.9★</div>
+            <div className="text-4xl font-heading font-bold mb-2 text-[#67E8F9]">4.1★</div>
             <div className="text-sm text-slate-400 font-medium">Average Rating</div>
           </div>
           <div className="text-center px-4">
